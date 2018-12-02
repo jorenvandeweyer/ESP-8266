@@ -1,0 +1,16 @@
+
+
+
+SERVER ->  PC
+|            |
+?            |
+|            |
+ESP   ->   BOX 
+
+
+MQTT 
+    ESP connects
+
+
+API
+    ESP connects
