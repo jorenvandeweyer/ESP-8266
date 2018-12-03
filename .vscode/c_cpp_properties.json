@@ -6,7 +6,8 @@
                 "/Users/joren/Documents/Arduino/hardware/esp8266com/esp8266/**",
                 "/Users/joren/Documents/Arduino/hardware/esp8266com/esp8266/libraries/EEPROM",
                 "${workspaceFolder}/**",
-                "/Users/joren/Documents/Arduino/hardware/esp8266com/esp8266/cores/esp8266"
+                "/Users/joren/Documents/Arduino/hardware/esp8266com/esp8266/cores/esp8266",
+                "/Users/joren/Documents/Arduino/libraries/PubSubClient/src"
             ],
             "defines": [],
             "macFrameworkPath": [
