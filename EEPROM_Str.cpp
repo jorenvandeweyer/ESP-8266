@@ -1,5 +1,4 @@
 #include "EEPROM_Str.hpp"
-#include <iostream>
 #include <EEPROM.h>
 
 EEPROM_Str::EEPROM_Str(int s) {
