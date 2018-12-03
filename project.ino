@@ -44,7 +44,8 @@ void enableWebServer() {
 
 void setup() {
   pinMode(GPC4, INPUT);
-
+  pinMode(13, OUTPUT);
+  digitalWrite(13, HIGH);
   Serial.begin(115200);
   while (!Serial) { };
 
