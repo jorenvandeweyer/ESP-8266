@@ -1,22 +1,192 @@
-<!DOCTYPE html>
 <html>
-<head>
+    <head>
+        <title>ESP-8266 SSID Login</title>
+        <style>
+            html { width: 100%; height:100%; overflow:hidden; }
 
-</head>
-<body>
-    <form action='/connect'>
-        <div>
-            <div>
-                <input type='text' value='ssid'>
+            body {
+                margin: 0;
+                width: 100%;
+                height:100%;
+                font-family: 'Open Sans', sans-serif;
+            }
+
+            canvas {
+                display: block;
+                position:absolute;
+                top:0;
+                left:0;
+            }
+
+            #container {
+                height: 100%;
+                position: relative;
+            }
+            #container canvas, .login {
+                position: absolute;
+            }
+
+            .btn { display: inline-block; *display: inline; *zoom: 1; padding: 4px 10px 4px; margin-bottom: 0; font-size: 13px; line-height: 18px; color: #333333; text-align: center;text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75); vertical-align: middle; background-color: #f5f5f5; background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6); background-image: -ms-linear-gradient(top, #ffffff, #e6e6e6); background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6)); background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6); background-image: -o-linear-gradient(top, #ffffff, #e6e6e6); background-image: linear-gradient(top, #ffffff, #e6e6e6); background-repeat: repeat-x; filter: progid:dximagetransform.microsoft.gradient(startColorstr=#ffffff, endColorstr=#e6e6e6, GradientType=0); border-color: #e6e6e6 #e6e6e6 #e6e6e6; border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25); border: 1px solid #e6e6e6; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05); -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05); cursor: pointer; *margin-left: .3em; }
+            .btn:hover, .btn:active, .btn.active, .btn.disabled, .btn[disabled] { background-color: #e6e6e6; }
+            .btn-large { padding: 9px 14px; font-size: 15px; line-height: normal; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; }
+            .btn:hover { color: #333333; text-decoration: none; background-color: #e6e6e6; background-position: 0 -15px; -webkit-transition: background-position 0.1s linear; -moz-transition: background-position 0.1s linear; -ms-transition: background-position 0.1s linear; -o-transition: background-position 0.1s linear; transition: background-position 0.1s linear; }
+            .btn-primary, .btn-primary:hover { text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25); color: #ffffff; }
+            .btn-primary.active { color: rgba(255, 255, 255, 0.75); }
+            .btn-primary { background-color: #4a77d4; background-image: -moz-linear-gradient(top, #6eb6de, #4a77d4); background-image: -ms-linear-gradient(top, #6eb6de, #4a77d4); background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#6eb6de), to(#4a77d4)); background-image: -webkit-linear-gradient(top, #6eb6de, #4a77d4); background-image: -o-linear-gradient(top, #6eb6de, #4a77d4); background-image: linear-gradient(top, #6eb6de, #4a77d4); background-repeat: repeat-x; filter: progid:dximagetransform.microsoft.gradient(startColorstr=#6eb6de, endColorstr=#4a77d4, GradientType=0);  border: 1px solid #3762bc; text-shadow: 1px 1px 1px rgba(0,0,0,0.4); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.5); }
+            .btn-primary:hover, .btn-primary:active, .btn-primary.active, .btn-primary.disabled, .btn-primary[disabled] { filter: none; background-color: #4a77d4; }
+            .btn-block { width: 100%; display:block; }
+
+            * { -webkit-box-sizing:border-box; -moz-box-sizing:border-box; -ms-box-sizing:border-box; -o-box-sizing:border-box; box-sizing:border-box; }
+
+
+            .login { 
+                -webkit-transform: translate(-50%,-50%);
+                transform: translate(-50%,-50%);
+                z-index: 100;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width:300px;
+                height:300px;
+            }
+            .login h1 { color: #fff; text-shadow: 0 0 10px rgba(0,0,0,0.3); letter-spacing:1px; text-align:center; }
+
+            input { 
+                width: 100%; 
+                margin-bottom: 10px; 
+                background: rgba(0,0,0,0.3);
+                border: none;
+                outline: none;
+                padding: 10px;
+                font-size: 13px;
+                color: #fff;
+                text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+                border: 1px solid rgba(0,0,0,0.3);
+                border-radius: 4px;
+                box-shadow: inset 0 -5px 45px rgba(100,100,100,0.2), 0 1px 1px rgba(255,255,255,0.2);
+                -webkit-transition: box-shadow .5s ease;
+                -moz-transition: box-shadow .5s ease;
+                -o-transition: box-shadow .5s ease;
+                -ms-transition: box-shadow .5s ease;
+                transition: box-shadow .5s ease;
+            }
+
+            input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgba(255,255,255,0.2); }
+
+            /* Reset Select */
+            select {
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                -ms-appearance: none;
+                appearance: none;
+                outline: 0;
+                box-shadow: none;
+                border: 0 !important;
+                background: #2c3e50;
+                background-image: none;
+            }
+            /* Custom Select */
+            .select {
+                position: relative;
+                display: block;
+                width: 300px;
+                height: 38px;
+                line-height: 3;
+                background: #2c3e50;
+                overflow: hidden;
+                border-radius: .25em;
+                margin-bottom: 5px;
+            }
+            select {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0 0 0 .5em;
+            color: #fff;
+            cursor: pointer;
+            }
+            select::-ms-expand {
+            display: none;
+            }
+            /* Arrow */
+            .select::after {
+            content: '\25BC';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            padding: 0 1em;
+            background: #34495e;
+            pointer-events: none;
+            }
+            /* Transition */
+            .select:hover::after {
+            color: #f39c12;
+            }
+            .select::after {
+            -webkit-transition: .25s all ease;
+            -o-transition: .25s all ease;
+            transition: .25s all ease;
+            }
+        </style>
+    </head>
+    <body>
+        <div id='container'>
+            <div class='login'>
+                <h1>Login</h1>
+                <div>
+                    <div class='select'>
+                        <select id='ssid'>
+
+                        </select>
+                    </div>
+                    <input type='password' id='pass' placeholder='Password' required='required' />
+                    <button class='btn btn-primary btn-block btn-large' onclick='connect()'>Connect</button>
+                </div>
             </div>
-            <div>
-                <input type='password' value='password'>
-            </div>
-            <div>
-                <input type='submit' value='submit'>
-            </div>
+            <canvas id='canvas'>Canvas is not supported in your browser.</canvas>
+            <canvas id='canvas2'>Canvas is not supported in your browser.</canvas>
         </div>
-    </form>
 
-</body>
+        <script>
+var canvas=document.getElementById('canvas'),ctx=canvas.getContext('2d'),canvas2=document.getElementById('canvas2'),ctx2=canvas2.getContext('2d'),cw=window.innerWidth,ch=window.innerHeight,charArr=['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'],maxCharCount=100,fallingCharArr=[],fontSize=10,maxColums=cw/fontSize;function randomInt(t,a){return Math.floor(Math.random()*(a-t)+t)}function randomFloat(t,a){return Math.random()*(a-t)+t}function Point(t,a){this.x=t,this.y=a}canvas.width=canvas2.width=cw,canvas.height=canvas2.height=ch,Point.prototype.draw=function(t){this.value=charArr[randomInt(0,charArr.length-1)].toUpperCase(),this.speed=randomFloat(1,5),ctx2.fillStyle='rgba(255,255,255,0.8)',ctx2.font=fontSize+'px san-serif',ctx2.fillText(this.value,this.x,this.y),t.fillStyle='#0F0',t.font=fontSize+'px san-serif',t.fillText(this.value,this.x,this.y),this.y+=this.speed,this.y>ch&&(this.y=randomFloat(-100,0),this.speed=randomFloat(2,5))};for(var i=0;i<maxColums;i++)fallingCharArr.push(new Point(i*fontSize,randomFloat(-500,0)));var update=function(){ctx.fillStyle='rgba(0,0,0,0.05)',ctx.fillRect(0,0,cw,ch),ctx2.clearRect(0,0,cw,ch);for(var t=fallingCharArr.length;t--;){fallingCharArr[t].draw(ctx);fallingCharArr[t]}requestAnimationFrame(update)};update();
+
+function connect() {
+    var ssid = document.querySelector('#ssid').value;
+    var pass = document.querySelector('#pass').value;
+    fetch(`/connect?ssid=${ssid}&password=${pass}`).then(() => {
+        document.querySelector('button').style.display = 'none';
+        document.querySelector('.select').style.display = 'none';
+        document.querySelector('input').style.display = 'none';
+        document.querySelector('h1').innerText = 'Connected!';
+    })
+}
+
+function addOption(value) {
+    var options = document.querySelector('#ssid');
+    var option = document.createElement('option');
+    option.text = value;
+    options.add(option);
+}
+
+async function main() {
+    var networks = await getNetworks();
+    for (let i = 0; i < networks.length; i++) {
+        addOption(networks[i]);
+    }
+}
+
+async function getNetworks() {
+    var networks = await fetch('/results').then(res => res.text());
+
+    return networks.trim().split('\n').map(line => {
+        line = line.split(',');
+        return line[0];
+    });
+}
+
+main();
+        </script>
+    </body>
+
 </html>
